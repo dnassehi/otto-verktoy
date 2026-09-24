@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<title>Skriveapp</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="$BASE/static/favicon.ico">
+<link rel="icon" type="image/png" sizes="192x192" href="$BASE/static/favicon-192.png">
+<link rel="apple-touch-icon" href="$BASE/static/favicon-192.png">
+<link rel="manifest" href="$BASE/manifest.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 700px; margin: 2rem auto; padding: 0 1rem; color: #1f2937; }
+  h1 { display: flex; justify-content: space-between; align-items: center; }
+  a.logout { font-size: 0.85rem; color: #6b7280; text-decoration: none; }
+  .new-doc { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+  .new-doc input { flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+  .new-doc button { padding: 0.5rem 1rem; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer; }
+  .search { margin-bottom: 1.5rem; }
+  .search input { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+  ul { list-style: none; padding: 0; }
+  li { padding: 0.75rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+  li a { color: #111827; text-decoration: none; font-weight: 500; }
+  li a:hover { text-decoration: underline; }
+  .meta { display: flex; align-items: center; gap: 0.6rem; }
+  .updated { color: #9ca3af; font-size: 0.85rem; }
+  button.delete { font-size: 0.8rem; color: #b91c1c; background: none; border: 1px solid #fca5a5; border-radius: 4px; padding: 0.2rem 0.5rem; cursor: pointer; }
+  button.delete:hover { background: #fef2f2; }
+</style>
+</head>
+<body>
+<h1>Skriveapp <a class="logout" href="$BASE/logout">Logg ut</a></h1>
+<div class="new-doc">
+  <input id="newTitle" placeholder="Tittel på nytt dokument">
+  <button onclick="createDoc()">Nytt dokument</button>
+</div>
+<div class="search">
+  <input id="searchInput" placeholder="Søk i tittel og innhold...">
+</div>
+<ul id="docList">
+$DOC_ITEMS
+</ul>
+<script>
+const BASE = $BASE_JSON;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register(BASE + '/static/sw.js', {scope: BASE + '/'});
+}
+async function createDoc() {
+  const title = document.getElementById('newTitle').value.trim();
+  if (!title) return;
+  const res = await fetch(BASE + '/api/docs', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({title})
+  });
+  const doc = await res.json();
+  window.location.href = BASE + '/d/' + doc.slug;
+}
+
+function escapeHtml(s) {
+  const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+function renderDocs(docs) {
+  const list = document.getElementById('docList');
+  if (!docs.length) {
+    list.innerHTML = '<li style="color:#9ca3af;">Ingen dokumenter funnet.</li>';
+    return;
+  }
+  list.innerHTML = docs.map(d => `
+    <li data-slug="${escapeHtml(d.slug)}">
+      <a href="${BASE}/d/${escapeHtml(d.slug)}">${escapeHtml(d.title)}</a>
+      <span class="meta">
+        <span class="updated">${escapeHtml(d.updated)}</span>
+        <button class="delete" title="Slett dokument" onclick='deleteDoc(${JSON.stringify(d.slug)}, this)'>Slett</button>
+      </span>
+    </li>`).join('');
+}
+
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  clearTimeout(searchTimer);
+  const q = e.target.value.trim();
+  searchTimer = setTimeout(async () => {
+    const res = await fetch(BASE + '/api/docs?q=' + encodeURIComponent(q));
+    renderDocs(await res.json());
+  }, 250);
+});
+
+async function deleteDoc(slug, btn) {
+  if (!confirm('Slette dette dokumentet? Kan ikke angres i grensesnittet.')) return;
+  btn.disabled = true;
+  const res = await fetch(BASE + '/api/docs/' + slug, { method: 'DELETE' });
+  if (res.ok) {
+    btn.closest('li').remove();
+  } else {
+    btn.disabled = false;
+    alert('Kunne ikke slette dokumentet.');
+  }
+}
+
+</script>
+</body>
+</html>

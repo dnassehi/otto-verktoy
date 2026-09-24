@@ -1,0 +1,17 @@
+{
+  "_note": "Godkjent 2026-07-29 (ingen innvendinger). PubMed-fulltekst-tidsskriftnavn brukt for [ta]-filter.",
+  "journals": [
+    {"name": "BMJ", "why": "Ledende generalist-tidsskrift, hyppig dekning av helsepolitikk og KI"},
+    {"name": "JAMA", "why": "Ledende generalist-tidsskrift, ofte store KI-kliniske studier"},
+    {"name": "JAMA Internal Medicine", "why": "Praksisnær indremedisin/allmennmedisin-relevans"},
+    {"name": "The Lancet Digital Health", "why": "Dedikert digital helse/KI-tidsskrift"},
+    {"name": "NPJ Digital Medicine", "why": "Dedikert digital helse/KI-tidsskrift (Nature-familien)"},
+    {"name": "NEJM AI", "why": "Nytt (2024), dedikert til KI i klinisk medisin"},
+    {"name": "Family Practice", "why": "Allmennmedisin-spesifikt"},
+    {"name": "British Journal of General Practice", "why": "Allmennmedisin-spesifikt, UK"},
+    {"name": "Annals of Family Medicine", "why": "Allmennmedisin-spesifikt, US"},
+    {"name": "Scandinavian Journal of Primary Health Care", "why": "Allmennmedisin, nordisk kontekst"},
+    {"name": "Journal of Medical Internet Research", "why": "Digital helse bredt, høyt volum - brukes med strammere nøkkelordfilter"},
+    {"name": "Tidsskrift for Den norske legeforening", "why": "Norsk kontekst, helsepolitikk og fastlegeordning"}
+  ]
+}

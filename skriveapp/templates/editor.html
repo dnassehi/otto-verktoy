@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<title>$TITLE - Skriveapp</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="$BASE/static/favicon.ico">
+<link rel="icon" type="image/png" sizes="192x192" href="$BASE/static/favicon-192.png">
+<link rel="apple-touch-icon" href="$BASE/static/favicon-192.png">
+<link rel="manifest" href="$BASE/manifest.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Merriweather:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, sans-serif; margin: 0; color: #1f2937; }
+  .ql-editor { font-family: 'Lora', Georgia, 'Times New Roman', serif; font-size: 1.05rem; line-height: 1.65; }
+  .ql-font-sans { font-family: system-ui, sans-serif; }
+  .ql-font-georgia { font-family: Georgia, serif; }
+  .ql-font-merriweather { font-family: 'Merriweather', serif; }
+  .ql-font-nunito { font-family: 'Nunito Sans', sans-serif; }
+  .ql-font-times { font-family: 'Times New Roman', serif; }
+  .ql-font-mono { font-family: monospace; }
+  .ql-snow .ql-picker.ql-font { width: 150px; }
+  .ql-snow .ql-picker.ql-font .ql-picker-label::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item::before { content: 'Standard (Lora)'; }
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=sans]::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=sans]::before { content: 'Enkel (sans)'; font-family: system-ui, sans-serif; }
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=georgia]::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=georgia]::before { content: 'Georgia'; font-family: Georgia, serif; }
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=merriweather]::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=merriweather]::before { content: 'Merriweather'; font-family: 'Merriweather', serif; }
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=nunito]::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=nunito]::before { content: 'Nunito'; font-family: 'Nunito Sans', sans-serif; }
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=times]::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=times]::before { content: 'Times New Roman'; font-family: 'Times New Roman', serif; }
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value=mono]::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value=mono]::before { content: 'Monospace'; font-family: monospace; }
+  .ql-snow .ql-picker.ql-size { width: 80px; }
+  .ql-snow .ql-picker.ql-size .ql-picker-label::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item::before { content: 'Standard'; }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="12px"]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12px"]::before { content: '12'; }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="14px"]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before { content: '14'; }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="16px"]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16px"]::before { content: '16'; }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="18px"]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before { content: '18'; }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="20px"]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="20px"]::before { content: '20'; }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="24px"]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="24px"]::before { content: '24'; }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="28px"]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="28px"]::before { content: '28'; }
+  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="32px"]::before,
+  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="32px"]::before { content: '32'; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; border-bottom: 1px solid #e5e7eb; background: #fafafa; }
+  header a { color: #6b7280; text-decoration: none; font-size: 0.85rem; }
+  header h1 { font-size: 1rem; margin: 0; }
+  #status { font-size: 0.8rem; color: #9ca3af; margin-left: 0.75rem; }
+  .layout { display: flex; height: calc(100vh - 52px); }
+  .editor-col { flex: 1; display: flex; flex-direction: column; padding: 1rem; overflow: hidden; }
+  #editor { flex: 1; overflow-y: auto; background: white; }
+  .toolbar-extra { padding: 0.5rem 0; display: flex; gap: 0.5rem; align-items: center; }
+  .toolbar-extra button { padding: 0.4rem 0.7rem; border: 1px solid #d1d5db; background: white; border-radius: 4px; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; }
+  .toolbar-extra button:hover { background: #f3f4f6; }
+  .toolbar-extra button:disabled { opacity: 0.6; cursor: default; }
+  .toolbar-extra button svg { width: 16px; height: 16px; flex: none; }
+  .sidebar { width: 340px; border-left: 1px solid #e5e7eb; display: flex; flex-direction: column; background: #fcfcfc; }
+  .tabs { display: flex; border-bottom: 1px solid #e5e7eb; }
+  .tabs button { flex: 1; padding: 0.6rem; border: none; background: none; cursor: pointer; font-size: 0.9rem; color: #6b7280; }
+  .tabs button.active { color: #111827; border-bottom: 2px solid #2563eb; font-weight: 500; }
+  .panel { flex: 1; overflow-y: auto; padding: 0.75rem; display: none; }
+  .panel.active { display: flex; flex-direction: column; }
+  .comment { background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.6rem; margin-bottom: 0.6rem; }
+  .comment.resolved { opacity: 0.5; }
+  .comment .quote { font-style: italic; color: #6b7280; font-size: 0.85rem; border-left: 3px solid #d1d5db; padding-left: 0.5rem; margin-bottom: 0.4rem; }
+  .comment .thread-msg { font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .comment .thread-msg b { color: #2563eb; }
+  .comment .actions { display: flex; gap: 0.4rem; margin-top: 0.4rem; }
+  .comment .actions button { font-size: 0.75rem; padding: 0.2rem 0.5rem; border: 1px solid #d1d5db; background: white; border-radius: 4px; cursor: pointer; }
+  .chat-messages { flex: 1; overflow-y: auto; margin-bottom: 0.5rem; }
+  .chat-msg { margin-bottom: 0.6rem; font-size: 0.9rem; }
+  .chat-msg b { display: block; font-size: 0.75rem; color: #6b7280; margin-bottom: 0.1rem; }
+  .chat-msg .md > *:first-child { margin-top: 0; }
+  .chat-msg .md > *:last-child { margin-bottom: 0; }
+  .chat-msg .md p { margin: 0.4rem 0; }
+  .chat-msg .md ul, .chat-msg .md ol { margin: 0.3rem 0; padding-left: 1.3rem; }
+  .chat-msg .md li { margin: 0.15rem 0; }
+  .chat-msg .md code { background: #f3f4f6; padding: 0.05rem 0.3rem; border-radius: 3px; font-size: 0.85em; }
+  .chat-msg .md pre { background: #f3f4f6; padding: 0.5rem; border-radius: 4px; overflow-x: auto; }
+  .chat-msg .md a { color: #2563eb; }
+  .chat-input { display: flex; gap: 0.4rem; }
+  .chat-input textarea { flex: 1; resize: none; padding: 0.4rem; border: 1px solid #d1d5db; border-radius: 4px; font-family: inherit; }
+  .chat-input button { padding: 0 0.8rem; border: none; background: #2563eb; color: white; border-radius: 4px; cursor: pointer; }
+  #commentBox { position: fixed; display: none; background: white; border: 1px solid #d1d5db; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); padding: 0.5rem; z-index: 10; }
+  #commentBox textarea { width: 220px; height: 60px; font-family: inherit; }
+  #commentBox button { margin-top: 0.3rem; padding: 0.3rem 0.7rem; border: none; background: #2563eb; color: white; border-radius: 4px; cursor: pointer; }
+  .exportRow { display: flex; gap: 0.4rem; margin-top: 0.5rem; }
+  .exportRow input { flex: 1; padding: 0.4rem; border: 1px solid #d1d5db; border-radius: 4px; }
+  @media print {
+    header, .toolbar-extra, .sidebar, #commentBox, .ql-toolbar { display: none !important; }
+    .layout { display: block; height: auto; }
+    .editor-col { padding: 0; }
+    #editor { overflow: visible; border: none; }
+    .ql-container { border: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div><a href="$BASE/">&larr; Dokumenter</a> <h1 style="display:inline; margin-left:1rem;">$TITLE</h1><span id="status"></span></div>
+</header>
+<div class="layout">
+  <div class="editor-col">
+    <div id="editor"></div>
+    <div class="toolbar-extra">
+      <button onclick="commentOnSelection()" title="Kommenter valgt tekst">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="btnlabel">Kommenter</span>
+      </button>
+      <span style="flex:1"></span>
+      <button onclick="window.print()" title="Utskrift">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      </button>
+      <button onclick="downloadFile('docx')" title="Generer docx og lagre">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="btnlabel">docx</span>
+      </button>
+      <button onclick="downloadFile('pdf')" title="Generer pdf og lagre">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="btnlabel">pdf</span>
+      </button>
+      <input id="exportEmail" placeholder="din@epost.example" style="padding:0.4rem;border:1px solid #d1d5db;border-radius:4px;width:220px;">
+      <button onclick="exportDocx()" title="Generer docx og send på e-post">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+        <span class="btnlabel">Send</span>
+      </button>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="tabs">
+      <button id="tabComments" class="active" onclick="showTab('comments')">Kommentarer</button>
+      <button id="tabChat" onclick="showTab('chat')">Chat med Otto</button>
+    </div>
+    <div id="panelComments" class="panel active"></div>
+    <div id="panelChat" class="panel">
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input">
+        <textarea id="chatInput" rows="2" placeholder="Skriv til Otto..."></textarea>
+        <button onclick="sendChat()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="commentBox">
+  <div id="commentQuotePreview" style="font-size:0.8rem;color:#6b7280;margin-bottom:0.3rem;"></div>
+  <textarea id="commentText" placeholder="Kommentar..."></textarea><br>
+  <button onclick="submitComment()">Legg til</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+<script>
+const SLUG = $SLUG_JSON;
+const BASE = $BASE_JSON;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register(BASE + '/static/sw.js', {scope: BASE + '/'});
+}
+let quill, saveTimer, pendingQuote = null;
+let lastServerContent = null, lastLocalEditAt = 0;
+
+const Font = Quill.import('formats/font');
+Font.whitelist = [false,'sans','georgia','merriweather','nunito','times','mono'];
+Quill.register(Font, true);
+
+const Size = Quill.import('attributors/style/size');
+Size.whitelist = ['12px','14px','16px','18px','20px','24px','28px','32px'];
+Quill.register(Size, true);
+
+async function init() {
+  quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: { toolbar: [['bold','italic','underline'],[{header:[1,2,3,false]}],[{font:Font.whitelist}],[{size:[false,...Size.whitelist]}],[{list:'ordered'},{list:'bullet'}],['clean']] }
+  });
+  const res = await fetch(BASE + '/api/docs/' + SLUG);
+  if (res.status === 401) { window.location.href = BASE + '/login'; return; }
+  const doc = await res.json();
+  quill.root.innerHTML = doc.content;
+  lastServerContent = doc.content;
+  renderComments(doc.comments);
+  renderChat(doc.chat);
+  quill.on('text-change', (delta, oldDelta, source) => {
+    if (source === 'user') lastLocalEditAt = Date.now();
+    document.getElementById('status').textContent = 'Endret...';
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveContent, 1200);
+  });
+  setInterval(pollForUpdates, 4000);
+}
+
+async function saveContent() {
+  const html = quill.root.innerHTML;
+  await fetch(BASE + '/api/docs/' + SLUG + '/content', {
+    method: 'PUT', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({html})
+  });
+  lastServerContent = html;
+  document.getElementById('status').textContent = 'Lagret ' + new Date().toLocaleTimeString('no-NO');
+}
+
+// Poller for endringer Otto har gjort i dokumentet (via chat-panelet), slik at
+// siden oppdaterer seg selv uten at man må laste den på nytt manuelt. Hopper
+// over anvendelse mens man aktivt skriver selv (siste 5s) for å ikke rive bort
+// pågående lokal redigering - ingen ekte samtidig-redigering er implementert.
+async function pollForUpdates() {
+  if (Date.now() - lastLocalEditAt < 5000) return;
+  try {
+    const res = await fetch(BASE + '/api/docs/' + SLUG);
+    if (!res.ok) return;
+    const doc = await res.json();
+    if (doc.content !== lastServerContent) {
+      lastServerContent = doc.content;
+      quill.root.innerHTML = doc.content;
+      document.getElementById('status').textContent = 'Oppdatert av Otto ' + new Date().toLocaleTimeString('no-NO');
+    }
+  } catch (e) { /* stille - prøver igjen neste intervall */ }
+}
+
+function showTab(name) {
+  document.getElementById('tabComments').classList.toggle('active', name==='comments');
+  document.getElementById('tabChat').classList.toggle('active', name==='chat');
+  document.getElementById('panelComments').classList.toggle('active', name==='comments');
+  document.getElementById('panelChat').classList.toggle('active', name==='chat');
+}
+
+function commentOnSelection() {
+  const sel = quill.getSelection();
+  if (!sel || sel.length === 0) { alert('Merk litt tekst i dokumentet først.'); return; }
+  pendingQuote = quill.getText(sel.index, sel.length);
+  const bounds = quill.getBounds(sel.index, sel.length);
+  const editorRect = document.getElementById('editor').getBoundingClientRect();
+  const box = document.getElementById('commentBox');
+  box.style.left = (editorRect.left + bounds.left) + 'px';
+  box.style.top = (editorRect.top + bounds.bottom + window.scrollY + 8) + 'px';
+  document.getElementById('commentQuotePreview').textContent = '"' + pendingQuote.slice(0,80) + '"';
+  document.getElementById('commentText').value = '';
+  box.style.display = 'block';
+}
+
+async function submitComment() {
+  const text = document.getElementById('commentText').value.trim();
+  if (!text || !pendingQuote) return;
+  const res = await fetch(BASE + '/api/docs/' + SLUG + '/comments', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({quote: pendingQuote, text})
+  });
+  const comment = await res.json();
+  document.getElementById('commentBox').style.display = 'none';
+  const doc = await (await fetch(BASE + '/api/docs/' + SLUG)).json();
+  renderComments(doc.comments);
+  showTab('comments');
+}
+
+function renderComments(comments) {
+  const el = document.getElementById('panelComments');
+  el.innerHTML = '';
+  if (!comments.length) { el.innerHTML = '<p style="color:#9ca3af;font-size:0.85rem;">Ingen kommentarer ennå. Merk tekst i dokumentet og trykk "Kommenter valgt tekst".</p>'; return; }
+  comments.slice().reverse().forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'comment' + (c.resolved ? ' resolved' : '');
+    let html = '<div class="quote">' + escapeHtml(c.quote) + '</div>';
+    c.thread.forEach(m => { html += '<div class="thread-msg"><b>' + m.author + '</b>' + escapeHtml(m.text) + '</div>'; });
+    html += '<div class="actions"><button onclick="resolveComment(\'' + c.id + '\', ' + (!c.resolved) + ')">' + (c.resolved ? 'Gjenåpne' : 'Merk løst') + '</button></div>';
+    div.innerHTML = html;
+    el.appendChild(div);
+  });
+}
+
+async function resolveComment(id, resolved) {
+  await fetch(BASE + '/api/docs/' + SLUG + '/comments/' + id + '/resolve', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({resolved})
+  });
+  const doc = await (await fetch(BASE + '/api/docs/' + SLUG)).json();
+  renderComments(doc.comments);
+}
+
+function renderChat(chat) {
+  const el = document.getElementById('chatMessages');
+  el.innerHTML = '';
+  chat.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'chat-msg';
+    const rawHtml = marked.parse(m.text, {breaks: true});
+    const safeHtml = DOMPurify.sanitize(rawHtml);
+    div.innerHTML = '<b>' + (m.role === 'user' ? 'Deg' : 'Otto') + '</b><div class="md">' + safeHtml + '</div>';
+    el.appendChild(div);
+  });
+  el.scrollTop = el.scrollHeight;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const message = input.value.trim();
+  if (!message) return;
+  input.value = '';
+  input.disabled = true;
+  const el = document.getElementById('chatMessages');
+  const thinking = document.createElement('div');
+  thinking.className = 'chat-msg'; thinking.id = 'thinkingMsg';
+  thinking.innerHTML = '<b>Otto</b><i>Tenker...</i>';
+  el.appendChild(thinking); el.scrollTop = el.scrollHeight;
+  try {
+    await fetch(BASE + '/api/docs/' + SLUG + '/chat', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({message})
+    });
+  } finally {
+    const doc = await (await fetch(BASE + '/api/docs/' + SLUG)).json();
+    renderChat(doc.chat);
+    if (doc.content !== lastServerContent) {
+      lastServerContent = doc.content;
+      quill.root.innerHTML = doc.content;
+      document.getElementById('status').textContent = 'Oppdatert av Otto ' + new Date().toLocaleTimeString('no-NO');
+    }
+    input.disabled = false;
+    input.focus();
+  }
+}
+document.getElementById('chatInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+});
+
+function setBtnLabel(btn, text) {
+  const label = btn.querySelector('.btnlabel');
+  if (label) label.textContent = text;
+}
+
+async function exportDocx() {
+  const email = document.getElementById('exportEmail').value.trim();
+  const btn = event.currentTarget;
+  const orig = btn.querySelector('.btnlabel').textContent;
+  btn.disabled = true; setBtnLabel(btn, 'Sender...');
+  try {
+    const res = await fetch(BASE + '/api/docs/' + SLUG + '/export', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({to_email: email || null})
+    });
+    const data = await res.json();
+    if (res.ok) alert('Sendt til ' + data.sent_to);
+    else alert('Feil: ' + data.detail);
+  } finally {
+    btn.disabled = false; setBtnLabel(btn, orig);
+  }
+}
+
+async function downloadFile(fmt) {
+  const btn = event.currentTarget;
+  const orig = btn.querySelector('.btnlabel').textContent;
+  btn.disabled = true; setBtnLabel(btn, '...');
+  try {
+    await saveContent();
+    const res = await fetch(BASE + '/api/docs/' + SLUG + '/download.' + fmt);
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({detail: 'Ukjent feil'}));
+      alert('Feil: ' + data.detail);
+      return;
+    }
+    const blob = await res.blob();
+    const disposition = res.headers.get('Content-Disposition') || '';
+    const starMatch = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+    const plainMatch = disposition.match(/filename="?([^";]+)"?/i);
+    const filename = starMatch ? decodeURIComponent(starMatch[1]) : (plainMatch ? plainMatch[1] : ('dokument.' + fmt));
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  } finally {
+    btn.disabled = false; setBtnLabel(btn, orig);
+  }
+}
+
+function escapeHtml(s) {
+  const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+init();
+</script>
+</body>
+</html>

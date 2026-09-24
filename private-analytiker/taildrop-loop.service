@@ -1,0 +1,16 @@
+# Kopieres til ~/.config/systemd/user/taildrop-loop.service
+# Aktiver:  systemctl --user daemon-reload && systemctl --user enable --now taildrop-loop.service
+# Krever engangsoppsett:  sudo tailscale set --operator=$USER
+[Unit]
+Description=Henter filer sendt via Taildrop inn i privat innboks
+After=network.target tailscaled.service
+
+[Service]
+Type=simple
+ExecStartPre=/usr/bin/mkdir -p %h/privat-analyse/inn
+ExecStart=/usr/bin/tailscale file get --loop --conflict=rename %h/privat-analyse/inn/
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
