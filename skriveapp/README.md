@@ -25,6 +25,7 @@ python3 -m venv venv && venv/bin/pip install fastapi uvicorn itsdangerous python
 sudo apt install pandoc libreoffice-writer      # for docx/pdf-eksport
 export SKRIVEAPP_OP_ITEM="op://Agent/Skriveapp login"     # 1Password-item med feltet "password"
 export SKRIVEAPP_EXPORT_EMAILS="deg@example.org"
+export SKRIVEAPP_AGENT_NAME="Assistenten"                 # navnet på din egen agent, vises i chatten
 export SKRIVEAPP_BASE_PATH=""                             # f.eks. "/skriv" bak en proxy-sti
 venv/bin/uvicorn app:app --host 127.0.0.1 --port 8000
 ```

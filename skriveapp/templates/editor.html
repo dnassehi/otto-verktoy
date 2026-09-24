@@ -144,13 +144,13 @@
   <div class="sidebar">
     <div class="tabs">
       <button id="tabComments" class="active" onclick="showTab('comments')">Kommentarer</button>
-      <button id="tabChat" onclick="showTab('chat')">Chat med Otto</button>
+      <button id="tabChat" onclick="showTab('chat')">Chat med $AGENT_NAME</button>
     </div>
     <div id="panelComments" class="panel active"></div>
     <div id="panelChat" class="panel">
       <div class="chat-messages" id="chatMessages"></div>
       <div class="chat-input">
-        <textarea id="chatInput" rows="2" placeholder="Skriv til Otto..."></textarea>
+        <textarea id="chatInput" rows="2" placeholder="Skriv til $AGENT_NAME..."></textarea>
         <button onclick="sendChat()">Send</button>
       </div>
     </div>
@@ -168,6 +168,7 @@
 <script>
 const SLUG = $SLUG_JSON;
 const BASE = $BASE_JSON;
+const AGENT_NAME = $AGENT_NAME_JSON;
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register(BASE + '/static/sw.js', {scope: BASE + '/'});
 }
@@ -213,7 +214,7 @@ async function saveContent() {
   document.getElementById('status').textContent = 'Lagret ' + new Date().toLocaleTimeString('no-NO');
 }
 
-// Poller for endringer Otto har gjort i dokumentet (via chat-panelet), slik at
+// Poller for endringer agenten har gjort i dokumentet (via chat-panelet), slik at
 // siden oppdaterer seg selv uten at man må laste den på nytt manuelt. Hopper
 // over anvendelse mens man aktivt skriver selv (siste 5s) for å ikke rive bort
 // pågående lokal redigering - ingen ekte samtidig-redigering er implementert.
@@ -226,7 +227,7 @@ async function pollForUpdates() {
     if (doc.content !== lastServerContent) {
       lastServerContent = doc.content;
       quill.root.innerHTML = doc.content;
-      document.getElementById('status').textContent = 'Oppdatert av Otto ' + new Date().toLocaleTimeString('no-NO');
+      document.getElementById('status').textContent = 'Oppdatert av ' + AGENT_NAME + ' ' + new Date().toLocaleTimeString('no-NO');
     }
   } catch (e) { /* stille - prøver igjen neste intervall */ }
 }
@@ -298,7 +299,7 @@ function renderChat(chat) {
     div.className = 'chat-msg';
     const rawHtml = marked.parse(m.text, {breaks: true});
     const safeHtml = DOMPurify.sanitize(rawHtml);
-    div.innerHTML = '<b>' + (m.role === 'user' ? 'Deg' : 'Otto') + '</b><div class="md">' + safeHtml + '</div>';
+    div.innerHTML = '<b>' + (m.role === 'user' ? 'Deg' : AGENT_NAME) + '</b><div class="md">' + safeHtml + '</div>';
     el.appendChild(div);
   });
   el.scrollTop = el.scrollHeight;
@@ -313,7 +314,7 @@ async function sendChat() {
   const el = document.getElementById('chatMessages');
   const thinking = document.createElement('div');
   thinking.className = 'chat-msg'; thinking.id = 'thinkingMsg';
-  thinking.innerHTML = '<b>Otto</b><i>Tenker...</i>';
+  thinking.innerHTML = '<b>' + AGENT_NAME + '</b><i>Tenker...</i>';
   el.appendChild(thinking); el.scrollTop = el.scrollHeight;
   try {
     await fetch(BASE + '/api/docs/' + SLUG + '/chat', {
@@ -326,7 +327,7 @@ async function sendChat() {
     if (doc.content !== lastServerContent) {
       lastServerContent = doc.content;
       quill.root.innerHTML = doc.content;
-      document.getElementById('status').textContent = 'Oppdatert av Otto ' + new Date().toLocaleTimeString('no-NO');
+      document.getElementById('status').textContent = 'Oppdatert av ' + AGENT_NAME + ' ' + new Date().toLocaleTimeString('no-NO');
     }
     input.disabled = false;
     input.focus();

@@ -1,6 +1,6 @@
 # otto-verktoy
 
-Verktøy jeg har bygget rundt en personlig OpenClaw-agent ("Otto") som lege og forsker, delt som
+Verktøy jeg har bygget rundt en personlig OpenClaw-agent (min heter "Otto", din kan hete hva du vil) som lege og forsker, delt som
 utgangspunkt for deg som vil lage din egen. Alt er hentet fra et fungerende oppsett, men er renset
 for personlige data og gjort konfigurerbart. Det er **ikke** testet på din maskin eller mot dine
 kontoer, og det er **ikke** medisinsk utstyr eller en ferdig tjeneste.

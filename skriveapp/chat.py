@@ -1,4 +1,4 @@
-"""Chat med Otto fra skriveappen: hvert dokument har sin egen isolerte
+"""Chat med agenten fra skriveappen: hvert dokument har sin egen isolerte
 sesjon under den avgrensede agenten "skriveapp" (agent:skriveapp:<slug>),
 adressert via `openclaw agent` CLI-en (ett-gangs agent-tur gjennom Gateway,
 se docs/cli/agent.md). Dette gir persistent samtalehistorikk per dokument
@@ -20,6 +20,7 @@ import re
 import subprocess
 
 import storage
+from agentname import AGENT_NAME
 
 CHAT_TIMEOUT_SECONDS = 120
 
@@ -75,7 +76,7 @@ _UPDATE_RE = re.compile(r"```skriveapp:update\s*\n(.*?)```", re.S)
 _CREATE_RE = re.compile(r"```skriveapp:create\s*\ntitle:\s*(.+?)\n-{3,}\s*\n(.*?)```", re.S)
 _REPLACE_RE = re.compile(r"```skriveapp:replace\s*\n(.*?)```", re.S)
 
-# Dokumentinnhold sendt til modellen kuttes ved denne lengden (se send_to_otto).
+# Dokumentinnhold sendt til modellen kuttes ved denne lengden (se send_to_agent).
 # Terskelen brukes også som sikkerhetsnett: en skriveapp:update som krymper et
 # ikke-trivielt dokument til under halvparten av gjeldende lengde blir avvist,
 # siden det nesten alltid betyr at modellen jobbet ut fra et avkuttet utdrag
@@ -102,8 +103,8 @@ def _strip_html(html: str) -> str:
 
 
 def _sanitize_html(html: str) -> str:
-    """Minimal allowlist-sanitizer for HTML Otto selv genererer (skriveapp:update/
-    create-blokker). Nødvendig fordi web_fetch/web_search-innhold Otto har lest
+    """Minimal allowlist-sanitizer for HTML agenten selv genererer (skriveapp:update/
+    create-blokker). Nødvendig fordi web_fetch/web_search-innhold agenten har lest
     under research i prinsippet kunne prøve å presse ham til å inkludere en
     <script>/on*-payload i dokument-HTML-en, som ellers ville kjørt usanert i
     brukerens innloggede nettleser (lagret XSS) - i motsetning til Quill-editorens
@@ -201,7 +202,7 @@ def _apply_document_actions(slug: str, reply: str) -> str:
     return display.strip()
 
 
-def send_to_otto(slug: str, title: str, doc_html: str, open_comments: list[dict], message: str) -> str:
+def send_to_agent(slug: str, title: str, doc_html: str, open_comments: list[dict], message: str) -> str:
     context_parts = [CAPABILITY_NOTE, f'[Skriveapp-dokument: "{title}"]']
     plain = _strip_html(doc_html)
     if plain:
@@ -237,12 +238,12 @@ def send_to_otto(slug: str, title: str, doc_html: str, open_comments: list[dict]
     try:
         data = json.loads(result.stdout)
     except json.JSONDecodeError as e:
-        raise ChatError(f"Kunne ikke tolke svar fra Otto: {e}") from e
+        raise ChatError(f"Kunne ikke tolke svar fra {AGENT_NAME}: {e}") from e
     if data.get("status") != "ok":
-        raise ChatError(f"Otto-sesjon feilet: {data.get('summary')}")
+        raise ChatError(f"{AGENT_NAME}-sesjon feilet: {data.get('summary')}")
     payloads = data.get("result", {}).get("payloads", [])
     texts = [p.get("text", "") for p in payloads if p.get("text")]
-    reply = "\n\n".join(texts) if texts else "(Otto svarte uten tekst.)"
+    reply = "\n\n".join(texts) if texts else f"({AGENT_NAME} svarte uten tekst.)"
 
     try:
         reply = _apply_document_actions(slug, reply)

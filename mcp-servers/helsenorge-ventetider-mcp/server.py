@@ -37,7 +37,7 @@ from mcp.server.fastmcp import FastMCP
 
 BASE = "https://tjenester.helsenorge.no/proxy/velgbehandlingssted/api/v1"
 TIMEOUT = 30
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; OttoMCP/1.0)"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; OpenClawAgentMCP/1.0)"}
 
 REGION_TAG = "HelseVest"
 REGION_LABEL = "Helse Vest (Helse Stavanger, Helse Bergen, Helse Fonna, Helse Førde) + Sørlandet sykehus Flekkefjord"

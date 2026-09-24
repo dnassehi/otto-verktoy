@@ -100,7 +100,7 @@ def okonomi_dagligvarer_prishistorikk(eans: list[str], days: int = 30) -> str:
     the last N days (default 30). NOTE: in testing (2026-08-16) this
     endpoint returned an empty result with an underlying HTTP 422 from the
     Kassal.app backend even for a barcode with confirmed price history via
-    okonomi_dagligvarer_sok - it may require upstream authentication Otto
+    okonomi_dagligvarer_sok - it may require upstream authentication the agent
     does not have. Try okonomi_dagligvarer_sok or okonomi_dagligvarer_ean
     instead, which both already include recent price_history inline."""
     result = _post("/dagligvarer/prishistorikk", {"eans": eans, "days": days})

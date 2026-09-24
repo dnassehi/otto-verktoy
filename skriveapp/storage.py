@@ -11,6 +11,8 @@ import time
 import uuid
 from pathlib import Path
 
+from agentname import AGENT_NAME
+
 DOCS_DIR = Path(__file__).resolve().parent / "docs"
 
 
@@ -28,7 +30,7 @@ def ensure_repo() -> None:
     if not (DOCS_DIR / ".git").exists():
         _git(["init"], DOCS_DIR)
         _git(["config", "user.email", "agent@example.org"], DOCS_DIR)
-        _git(["config", "user.name", "Otto"], DOCS_DIR)
+        _git(["config", "user.name", AGENT_NAME], DOCS_DIR)
 
 
 def _commit(message: str) -> None:

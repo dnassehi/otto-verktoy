@@ -36,7 +36,7 @@ entur-mcp osv. (Python, `mcp==1.29.0`, egen venv).
 `okonomi_dagligvarer_prishistorikk` (POST-endepunktet) ga `HTTP 422` fra
 Kassal.app-bakenden i testing 2026-08-16, selv med en EAN som har bekreftet
 prishistorikk tilgjengelig via `okonomi_dagligvarer_sok`. Trolig krever
-dette spesifikke endepunktet en autentisering Otto ikke har mot
+dette spesifikke endepunktet en autentisering agenten ikke har mot
 Kassal.app direkte (Økonomi.no sitt eget wrapper-lag ser ut til å fungere,
 men viderefører feilen). Bruk i stedet `okonomi_dagligvarer_sok` eller
 `okonomi_dagligvarer_ean`, som begge allerede returnerer nylig

@@ -11,7 +11,7 @@ Gratis, ingen API-nøkkel nødvendig - kun et mailto-param for "polite
 pool" (raskere/mer stabil rate-limiting, OpenAlex' egen anbefalte
 praksis, ikke datadeling til tredjepart). Samme underliggende API som
 openalex-mcp/server.py (MCP-verktøy for interaktiv bruk i en aktiv
-Otto-sesjon) - denne modulen finnes fordi weekly_report.py kjøres
+agent-sesjon) - denne modulen finnes fordi weekly_report.py kjøres
 frittstående via cron, uten MCP-tilgang.
 """
 from __future__ import annotations

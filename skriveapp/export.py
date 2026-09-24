@@ -24,6 +24,7 @@ from pathlib import Path
 WORKSPACE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(WORKSPACE))
 from lib.mailer import send_email, MailerError  # noqa: E402
+from agentname import AGENT_NAME  # noqa: E402
 
 EXPORT_DIR = Path(__file__).resolve().parent / "exports"
 
@@ -94,9 +95,9 @@ def export_and_send(slug: str, title: str, html: str, to_email: str) -> str:
         send_email(
             to=to_email,
             subject=f"Utkast: {title}",
-            body=f"Vedlagt: \"{title}\", generert fra skriveappen.\n\nOtto",
+            body=f"Vedlagt: \"{title}\", generert fra skriveappen.\n\n{AGENT_NAME}",
             attachments=[docx_path],
-            display_name="Otto (skriveapp)",
+            display_name=f"{AGENT_NAME} (skriveapp)",
         )
     except MailerError as e:
         raise ExportError(f"Kunne ikke sende e-post: {e}") from e

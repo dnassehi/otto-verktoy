@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""MCP wrapper around lib/refdb.py (Otto's own reference-manager SQLite
+"""MCP wrapper around lib/refdb.py (the agent's own reference-manager SQLite
 database), built 2026-09-01 so the sandboxed `skriveapp` agent can search
-articles Otto has already vetted/commented on, without shell/filesystem
+articles the agent has already vetted/commented on, without shell/filesystem
 access. Deliberately exposes only the read functions (search/find/stats/
 list) - never add_article/attach_pdf/export/import here, those stay
 Bash-only on the main agent.

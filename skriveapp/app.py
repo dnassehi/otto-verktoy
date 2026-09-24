@@ -15,6 +15,7 @@ import auth
 import storage
 import export as export_mod
 import chat as chat_mod
+from agentname import AGENT_NAME
 
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
@@ -43,6 +44,8 @@ BASE_PATH = os.environ.get("SKRIVEAPP_BASE_PATH", "").rstrip("/")
 def render(name: str, **kwargs) -> str:
     tpl = Template((TEMPLATES_DIR / name).read_text())
     kwargs.setdefault("BASE", BASE_PATH)
+    kwargs.setdefault("AGENT_NAME", html.escape(AGENT_NAME))
+    kwargs.setdefault("AGENT_NAME_JSON", json.dumps(AGENT_NAME))
     kwargs.setdefault("BASE_JSON", json.dumps(BASE_PATH))
     return tpl.safe_substitute(**kwargs)
 
@@ -243,10 +246,10 @@ def api_chat(slug: str, body: ChatBody):
     storage.append_chat(slug, "user", body.message)
     open_comments = [c for c in doc["comments"] if not c["resolved"]]
     try:
-        reply = chat_mod.send_to_otto(slug, doc["meta"]["title"], doc["content"], open_comments, body.message)
+        reply = chat_mod.send_to_agent(slug, doc["meta"]["title"], doc["content"], open_comments, body.message)
     except chat_mod.ChatError as e:
-        reply = f"(Feil ved kontakt med Otto: {e})"
-    msg = storage.append_chat(slug, "otto", reply)
+        reply = f"(Feil ved kontakt med {AGENT_NAME}: {e})"
+    msg = storage.append_chat(slug, "assistant", reply)
     return msg
 
 

@@ -17,7 +17,7 @@ Kun de to "Public data"-endepunktene er kontofrie:
   instrukser, stortingsvedtak)
 
 Alle øvrige endepunkter (strukturert søk, enkeltparagraf-oppslag,
-AI-funksjonalitet) krever en Lovdata API-konto (`X-API-Key`), som Otto ikke
+AI-funksjonalitet) krever en Lovdata API-konto (`X-API-Key`), som agenten ikke
 har. Løsningen er derfor samme mønster som FEST-legemiddeldatabasen: last
 ned hele det gratis datasettet periodisk og bygg en lokal søkbar database.
 
