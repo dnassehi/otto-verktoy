@@ -19,6 +19,7 @@ Start med veilederen: **[nassehi.no/alt/otto-veileder](https://nassehi.no/alt/ot
 | [`skriveapp/`](skriveapp/) | Selvhostet skriveapp med kommentarer, agent-chat og eksport |
 | [`mcp-servers/`](mcp-servers/) | MCP-servere mot åpne norske og internasjonale datakilder (SSB, FHI, Brønnøysund, Lovdata, MET, Kartverket, WHO, m.fl.) |
 | [`private-analytiker/`](private-analytiker/) | Veileder og skript for en helt lokal KI-analytiker med Ollama og Qwen3 |
+| [`tresor/`](tresor/) | Kryptert mappe (gocryptfs) for egne personlige dokumenter, med automatisk montering og sletting av gamle filer |
 
 ## Bevisste utelatelser
 
@@ -33,7 +34,7 @@ den er en annens prosjekt: [langtind/ssb-mcp-server](https://github.com/langtind
 - Ingen nøkler eller passord i repoet. Bruk en passordbehandler (1Password service account) og
   miljøvariabler. Se `lib/README.md`.
 - Gi agenten sin egen e-postkonto. Ikke gi den tilgang til din egen e-post, kalender eller
-  pasientdata.
+  pasientdata. Egne personlige dokumenter kan ligge i en kryptert mappe, se [`tresor/`](tresor/).
 - Les koden før du kjører den. Du er selv ansvarlig for bruken, også for personvern,
   helsepersonelloven og institusjonens regler.
 - Alt er utgangspunkt, ikke fasit. Feil kan forekomme.

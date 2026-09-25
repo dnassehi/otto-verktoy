@@ -21,6 +21,7 @@ og ingen nøkler ligger i koden. Se sikkerhetsseksjonen i
 | `helsedir_innhold.py`, `helsedir_legemidler.py` | Helsedirektoratets åpne API-er (retningslinjer, ATC/FEST). Krever egen abonnementsnøkkel fra utvikler.helsedirektoratet.no. |
 | `helserefusjon.py` | Takstbruk/refusjonsstatistikk (åpent API, ingen nøkkel). |
 | `snl.py`, `wikipedia_lookup.py` | Oppslag i Store norske leksikon og Wikipedia. |
+| `tresor.py` | `tresor_path("mappe", ...)` gir en sti i det krypterte tresoret (`~/tresor`) og feiler hvis det ikke er montert, slik at klartekst aldri skrives til den åpne disken. Se `../tresor/`. |
 | `ics_calendar.py` | Read-only lesing av en kalender via ICS-abonnementslenke (lenken ligger i 1Password). |
 
 ## Konfigurasjon (miljøvariabler)
